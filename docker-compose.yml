@@ -1,0 +1,70 @@
+services:
+  app:
+    build:
+      context: ./app  # Ensure your application code is in the ./app directory
+      dockerfile: Dockerfile  # Use a Dockerfile to configure your app
+    container_name: app
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - QDRANT_URL=http://qdrant:6333
+      - CLEARML_API_HOST=https://api.clear.ml  # ClearML hosted service
+      - CLEARML_API_ACCESS_KEY=TIL78E0B086FLLDS68A4WW37052NPC
+      - CLEARML_API_SECRET_KEY=xw73xLVjyrJ1z034S8xV-VVKATfqo0vWqiubO6TpTPdZB_W5SRX5ewfMlTf1etoSazQ
+      - HUGGINGFACE_HUB=https://huggingface.co
+    ports:
+      - "8000:8000"  # Expose your app's port
+    depends_on:
+      - mongo
+      - qdrant
+      - clearml-apiserver
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    environment:
+      - QDRANT__HOST=0.0.0.0
+      - QDRANT__PORT=6333
+    ports:
+      - "6333:6333"
+    networks:
+      - app-network
+
+  # ClearML API server configuration (includes Web and File Server functionality)
+  clearml-apiserver:
+    image: allegroai/clearml:latest
+    container_name: clearml-apiserver
+    environment:
+      - CLEARML_SERVER_HOST=0.0.0.0
+      - CLEARML_SERVER_PORT=8008
+      - CLEARML_API_SERVER=true
+      - CLEARML_WEB_SERVER=true  # This is needed to enable web server functionality
+      - CLEARML_FILES_SERVER=true  # This enables file server functionality
+    ports:
+      - "8008:8008"  # API server
+      - "8080:8080"  # Web server (UI)
+      - "8081:8081"  # File server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
