@@ -1,8 +1,18 @@
-torch
-keras
-transformers==4.33.0  # or the version you are using
-tensorflow==2.11.0  # Ensure the correct TensorFlow version is installed
-huggingface_hub
-pymongo
-qdrant-client
-clearml
+# Core AI Libraries
+torch          # PyTorch for deep learning
+tensorflow==2.16.1     # TensorFlow for deep learning
+tf-keras==2.16.0        # Keras as a high-level API for TensorFlow
+
+# NLP and Transformers
+transformers   # Hugging Face Transformers library
+huggingface_hub # Integration with Hugging Face Hub
+
+# Database and Vector Search
+pymongo        # MongoDB client library
+qdrant-client  # Client for Qdrant vector database
+
+# Experiment Management
+clearml       # ClearML for experiment tracking and orchestration
+
+fastapi
+uvicorn
