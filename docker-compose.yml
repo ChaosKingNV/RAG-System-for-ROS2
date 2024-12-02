@@ -16,7 +16,7 @@ services:
     depends_on:
       - mongo
       - qdrant
-      - clearml-apiserver
+      # - clearml-apiserver
     networks:
       - app-network
 
@@ -44,21 +44,21 @@ services:
     networks:
       - app-network
 
-  # ClearML API server configuration (includes Web and File Server functionality)
-  clearml-apiserver:
-    image: allegroai/clearml:latest
-    container_name: clearml-apiserver
-    environment:
-      - CLEARML_SERVER_HOST=0.0.0.0
-      - CLEARML_API_SERVER=true
-      - CLEARML_WEB_SERVER=true  # This is needed to enable web server functionality
-      - CLEARML_FILES_SERVER=true  # This enables file server functionality
-      - CLEARML_API_HOST=https://api.mydomain.com  # Use the domain name for your API server
-      - CLEARML_WEB_HOST=https://web.mydomain.com  # Use the domain name for your Web server
-      - CLEARML_FILES_HOST=https://files.mydomain.com  # Use the domain name for your File server
-    networks:
-      - app-network
-    restart: always  # Optionally set restart behavior if needed
+  # # ClearML API server configuration (includes Web and File Server functionality)
+  # clearml-apiserver:
+  #   image: allegroai/clearml:latest
+  #   container_name: clearml-apiserver
+  #   environment:
+  #     - CLEARML_SERVER_HOST=0.0.0.0
+  #     - CLEARML_API_SERVER=true
+  #     - CLEARML_WEB_SERVER=true  # This is needed to enable web server functionality
+  #     - CLEARML_FILES_SERVER=true  # This enables file server functionality
+  #     - CLEARML_API_HOST=https://api.mydomain.com  # Use the domain name for your API server
+  #     - CLEARML_WEB_HOST=https://web.mydomain.com  # Use the domain name for your Web server
+  #     - CLEARML_FILES_HOST=https://files.mydomain.com  # Use the domain name for your File server
+  #   networks:
+  #     - app-network
+  #   restart: always  # Optionally set restart behavior if needed
 
 networks:
   app-network:

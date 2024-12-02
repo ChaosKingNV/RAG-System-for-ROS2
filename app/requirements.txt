@@ -6,6 +6,7 @@ tf-keras==2.16.0        # Keras as a high-level API for TensorFlow
 # NLP and Transformers
 transformers   # Hugging Face Transformers library
 huggingface_hub # Integration with Hugging Face Hub
+sentence-transformers  # Sentence Transformers for text embeddings (used in featurization)
 
 # Database and Vector Search
 pymongo        # MongoDB client library
@@ -14,5 +15,6 @@ qdrant-client  # Client for Qdrant vector database
 # Experiment Management
 clearml       # ClearML for experiment tracking and orchestration
 
-fastapi
-uvicorn
+# Web Framework and Uvicorn for FastAPI
+FastAPI     # FastAPI for building APIs
+uvicorn     # Uvicorn as an ASGI server for FastAPI

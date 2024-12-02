@@ -8,6 +8,10 @@ from pydantic import BaseModel
 import uvicorn
 import threading
 import time
+from etl.github_fetcher import fetch_github_docs
+from etl.youtube_fetcher import fetch_youtube_transcript
+from etl.cleaner import clean_data
+from etl.mongodb_loader import store_data_in_mongo
 
 # FastAPI app setup
 app = FastAPI()
@@ -85,6 +89,29 @@ def keep_alive():
 # Run the keep_alive function in the background
 thread = threading.Thread(target=keep_alive, daemon=True)
 thread.start()
+
+# ETL pipeline function
+def run_etl():
+    # Fetch data from GitHub and YouTube
+    github_docs = fetch_github_docs()
+    youtube_transcript = fetch_youtube_transcript('video_id')  # Replace with actual video ID
+    
+    # Clean the data
+    cleaned_github_docs = clean_data(github_docs)
+    cleaned_youtube_transcript = clean_data(youtube_transcript)
+    
+    # Store data in MongoDB
+    store_data_in_mongo(cleaned_github_docs, "ros2_docs")
+    store_data_in_mongo(cleaned_youtube_transcript, "youtube_transcripts")
+
+# API endpoint to trigger the ETL pipeline manually
+@app.post("/run_etl")
+def trigger_etl():
+    try:
+        run_etl()  # Call the ETL pipeline
+        return {"message": "ETL pipeline executed successfully!"}
+    except Exception as e:
+        return {"message": f"ETL pipeline failed: {e}"}
 
 # Start the FastAPI server if the script is run directly
 if __name__ == "__main__":
