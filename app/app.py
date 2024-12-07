@@ -72,7 +72,6 @@ def get_status():
 # Background task to keep connections alive (optional, for long-running processes)
 def keep_alive():
     while True:
-        # You can add periodic checks or keep-alive tasks here
         print("⚡ Checking connections...")
         try:
             # MongoDB health check
@@ -83,7 +82,6 @@ def keep_alive():
                 task.update_task_status()
         except Exception as e:
             print(f"❌ Error in keep_alive: {e}")
-        
         time.sleep(60)  # Keep the process running and check every minute
 
 # Run the keep_alive function in the background
@@ -94,7 +92,7 @@ thread.start()
 def run_etl():
     # Fetch data from GitHub and YouTube
     github_docs = fetch_github_docs()
-    youtube_transcript = fetch_youtube_transcript('video_id')  # Replace with actual video ID
+    youtube_transcript = fetch_youtube_transcript('qqRRyJLiu4U')  # Replace with actual video ID
     
     # Clean the data
     cleaned_github_docs = clean_data(github_docs)

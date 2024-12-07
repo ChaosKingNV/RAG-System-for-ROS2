@@ -1,7 +1,7 @@
 # Core AI Libraries
 torch          # PyTorch for deep learning
-tensorflow==2.16.1     # TensorFlow for deep learning
-tf-keras==2.16.0        # Keras as a high-level API for TensorFlow
+tensorflow     # TensorFlow for deep learning
+tf-keras       # Keras as a high-level API for TensorFlow
 
 # NLP and Transformers
 transformers   # Hugging Face Transformers library
@@ -18,3 +18,9 @@ clearml       # ClearML for experiment tracking and orchestration
 # Web Framework and Uvicorn for FastAPI
 FastAPI     # FastAPI for building APIs
 uvicorn     # Uvicorn as an ASGI server for FastAPI
+
+# GitHub Integration
+PyGithub      # GitHub library for API integration
+
+# Youtube Integration
+youtube-transcript-api
