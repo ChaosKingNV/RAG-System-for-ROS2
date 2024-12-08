@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile  # Use a Dockerfile to configure your app
     container_name: app
     environment:
-      - MONGO_URI=mongodb://mongo:27017
+      -  MONGO_URI=mongodb://root:example@mongo:27017/
       - QDRANT_URL=http://qdrant:6333
       - CLEARML_API_HOST=https://api.clear.ml  # ClearML hosted service
       - CLEARML_API_ACCESS_KEY=TIL78E0B086FLLDS68A4WW37052NPC
