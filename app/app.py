@@ -8,7 +8,7 @@ from pydantic import BaseModel
 import uvicorn
 import threading
 import time
-from etl.github_fetcher import fetch_github_docs
+from etl.github_fetcher import fetch_ros2_middleware_docs
 from etl.youtube_fetcher import fetch_youtube_transcript
 from etl.cleaner import clean_data
 from etl.mongodb_loader import store_data_in_mongo
@@ -91,7 +91,7 @@ thread.start()
 # ETL pipeline function
 def run_etl():
     # Fetch data from GitHub and YouTube
-    github_docs = fetch_github_docs()
+    github_docs = fetch_ros2_middleware_docs()
     youtube_transcript = fetch_youtube_transcript('qqRRyJLiu4U')  # Replace with actual video ID
     
     # Clean the data
