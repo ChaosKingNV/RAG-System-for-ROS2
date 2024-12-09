@@ -1,7 +1,7 @@
-from github_fetcher import fetch_github_docs
-from mongodb_loader import store_data_in_mongo
-from clear_collection import clear_collection
-from web_scraper import scrape_recursively
+from .github_fetcher import fetch_github_docs
+from .mongodb_loader import store_data_in_mongo
+from .clear_collection import clear_collection
+from .web_scraper import scrape_recursively
 
 
 # Define Repositories for GitHub Fetching
