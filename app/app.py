@@ -16,82 +16,65 @@ SUBDOMAINS = {
     "gazebo_docs": "gazebosim/docs"
 }
 
-# Base URL for Web Scraping
-#ROS_DOCS_BASE_URL = "https://docs.ros.org/en/rolling"
-TEST_COLLECTION = "test_site_docs"
-TEST_SITE_BASE_URL = "https://webscraper.io/test-sites/e-commerce/static"
+# Base URLs for Web Scraping
+WEB_SITES = {
+    "ros2_docs": "https://docs.ros.org/en/rolling",
+    "nav2_docs": "https://docs.nav2.org/",
+    "moveit2_docs": "https://moveit.picknik.ai/main/",
+    "gazebo_docs": "https://gazebosim.org/libs/"
+}
 
 
-# Custom URL Filter for the ROS2 Docs Website
-# def ros2_url_filter(base_url, next_url, visited_urls):
-#     """
-#     Custom filter function for validating URLs within ROS2 docs.
+# Custom URL Filter for General Web Scraping
+def web_scraper_filter(base_url, next_url, visited_urls):
+    """
+    Custom filter function for validating URLs within the target websites.
 
-#     Args:
-#         base_url (str): The root/base URL to compare with.
-#         next_url (str): The next URL to validate.
-#         visited_urls (set): A set of already visited URLs.
+    Args:
+        base_url (str): The root/base URL to compare with.
+        next_url (str): The next URL to validate.
+        visited_urls (set): A set of already visited URLs.
 
-#     Returns:
-#         bool: True if the next_url is valid and should be visited.
-#     """
-#     return (
-#         next_url.startswith(base_url) and  # Must start with the base URL
-#         next_url not in visited_urls and  # Avoid revisiting pages
-#         "/en/rolling/" in next_url  # Ensure it's within the docs site
-#     )
-def test_site_url_filter(base_url, next_url, visited_urls):
+    Returns:
+        bool: True if the next_url is valid and should be visited.
+    """
     return (
-        next_url.startswith(base_url) and
-        next_url not in visited_urls
+        next_url.startswith(base_url) and  # Must start with the base URL
+        next_url not in visited_urls  # Avoid revisiting pages
     )
 
 
 @app.post("/run_etl")
 def trigger_etl():
     """
-    Triggers the ETL pipeline for all subdomains.
+    Triggers the ETL pipeline for all subdomains and web docs.
     """
     try:
-        # Step 1: Clear all collections at once
-        print(f"✅ Cleared collection '{TEST_COLLECTION}'.")
+        # Step 1: Clear all collections
         collections_to_clear = list(SUBDOMAINS.keys())
         for collection_name in collections_to_clear:
             clear_collection(collection_name)
             print(f"✅ Cleared collection '{collection_name}'.")
 
-        # Step 2: Scrape ROS Official Docs Using Web Scraper
-        scraped_docs = scrape_recursively(
-            #ROS_DOCS_BASE_URL, url_filter=ros2_url_filter
-            TEST_SITE_BASE_URL, url_filter=test_site_url_filter
-            
-        )
-        for doc in scraped_docs:
-            doc["source"] = "test_site_scraping"
-        store_data_in_mongo(scraped_docs, TEST_COLLECTION)
-        print(f"✅ Scraped and stored {len(scraped_docs)} documents from the test site.")
+        # Step 2: Scrape Official Docs from Websites
+        for collection_name, base_url in WEB_SITES.items():
+            scraped_docs = scrape_recursively(base_url, url_filter=web_scraper_filter)
 
-        # # Add a "source" field to distinguish this data
-        # for doc in scraped_docs:
-        #     doc["source"] = "web_scraping"
-        # store_data_in_mongo(scraped_docs, "ros2_docs")
-        # print(f"✅ Scraped and stored {len(scraped_docs)} ROS2 docs from official site.")
+            # Add a "source" field to distinguish this data
+            for doc in scraped_docs:
+                doc["source"] = "web_scraping"
+            store_data_in_mongo(scraped_docs, collection_name)
+            print(f"✅ Scraped and stored {len(scraped_docs)} docs from '{collection_name}'.")
 
         # Step 3: Fetch GitHub Repositories
         for collection_name, repo_name in SUBDOMAINS.items():
-            if collection_name == "ros2_docs":
-                # Fetch only the GitHub part for ros2_docs
-                github_docs = fetch_github_docs(repo_name, "")
-                # Add a "source" field to distinguish this data
-                for doc in github_docs:
-                    doc["source"] = "github_fetching"
-                store_data_in_mongo(github_docs, "ros2_docs")
-                print(f"✅ Fetched and stored {len(github_docs)} GitHub docs in 'ros2_docs'.")
-            else:
-                # Handle other repositories normally
-                github_docs = fetch_github_docs(repo_name, "")
-                store_data_in_mongo(github_docs, collection_name)
-                print(f"✅ Fetched and stored {len(github_docs)} docs in '{collection_name}'.")
+            github_docs = fetch_github_docs(repo_name, "")
+
+            # Add a "source" field to distinguish this data
+            for doc in github_docs:
+                doc["source"] = "github_fetching"
+            store_data_in_mongo(github_docs, collection_name)
+            print(f"✅ Fetched and stored {len(github_docs)} GitHub docs in '{collection_name}'.")
 
         return {"message": "✅ ETL pipeline executed successfully for all subdomains!"}
 
