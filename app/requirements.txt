@@ -26,3 +26,5 @@ PyGithub      # GitHub library for API integration
 youtube-transcript-api
 
 beautifulsoup4
+
+tqdm
