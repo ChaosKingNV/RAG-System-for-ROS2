@@ -10,10 +10,16 @@ from youtube_pipeline.youtube_transcript_collector import fetch_youtube_transcri
 from youtube_pipeline.question_answer_generator import generate_labeled_data
 from youtube_pipeline.config import VIDEO_IDS, TRANSCRIPTS_FILE, LABELED_DATA_FILE
 
+# Import Fine-Tuning Pipeline
+from finetuning.data_preprocessor import LabeledDataset
+from finetuning.model_trainer import train_model
+from finetuning.upload_to_hub import upload_model_to_hub
+from finetuning.config import CONFIG
+
 # Initialize FastAPI
 app = FastAPI(
     title="AI Project API",
-    description="API for ETL, Featurization, and YouTube Labeling Pipelines",
+    description="API for ETL, Featurization, YouTube, and Fine-Tuning Pipelines",
     version="1.0.0"
 )
 
@@ -53,6 +59,23 @@ def trigger_generate_labeled_data():
     """Triggers labeled Q/A data generation."""
     generate_labeled_data(input_file=TRANSCRIPTS_FILE, output_file=LABELED_DATA_FILE)
     return {"status": "success", "details": f"Labeled data saved to {LABELED_DATA_FILE}"}
+
+# Fine-Tuning Endpoint
+@app.post("/run_finetuning")
+def trigger_finetuning():
+    """Triggers the Fine-Tuning process."""
+    train_dataset = LabeledDataset(data_file=LABELED_DATA_FILE)
+    eval_dataset = LabeledDataset(data_file=LABELED_DATA_FILE)  # Placeholder for evaluation
+    train_model(train_dataset, eval_dataset, CONFIG)
+    return {"status": "success", "details": f"Model fine-tuned and saved to {CONFIG['output_dir']}"}
+
+# Upload Model to Hugging Face Hub Endpoint
+@app.post("/upload_model_to_hub")
+def trigger_model_upload():
+    """Triggers uploading the trained model to Hugging Face Hub."""
+    repo_name = "ChaosKingNV/finetuned-ros2-model"  # Replace with your repository name
+    upload_model_to_hub(repo_name=repo_name)
+    return {"status": "success", "details": f"Model uploaded to Hugging Face Hub at {repo_name}"}
 
 # Start the FastAPI server
 if __name__ == "__main__":

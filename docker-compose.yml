@@ -11,6 +11,7 @@ services:
       - CLEARML_API_ACCESS_KEY=TIL78E0B086FLLDS68A4WW37052NPC
       - CLEARML_API_SECRET_KEY=xw73xLVjyrJ1z034S8xV-VVKATfqo0vWqiubO6TpTPdZB_W5SRX5ewfMlTf1etoSazQ
       - HUGGINGFACE_HUB=https://huggingface.co
+      - HF_TOKEN=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
     ports:
       - "8000:8000"  # Expose your app's port
     depends_on:
