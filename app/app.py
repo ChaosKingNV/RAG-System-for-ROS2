@@ -16,6 +16,9 @@ from finetuning.model_trainer import train_model
 from finetuning.upload_to_hub import upload_model_to_hub
 from finetuning.config import CONFIG
 
+# Import ClearML Tracker
+from clearml_integration.clearml_tracker import register_model_with_clearml
+
 # Initialize FastAPI
 app = FastAPI(
     title="AI Project API",
@@ -76,6 +79,13 @@ def trigger_model_upload():
     repo_name = "ChaosKingNV/finetuned-ros2-model"  # Replace with your repository name
     upload_model_to_hub(repo_name=repo_name)
     return {"status": "success", "details": f"Model uploaded to Hugging Face Hub at {repo_name}"}
+
+# Register Model with ClearML Endpoint
+@app.post("/register_model_clearml")
+def trigger_register_clearml():
+    """Registers the fine-tuned model in ClearML."""
+    register_model_with_clearml()
+    return {"status": "success", "details": "Model registered in ClearML"}
 
 # Start the FastAPI server
 if __name__ == "__main__":
