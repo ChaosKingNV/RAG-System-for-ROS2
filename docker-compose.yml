@@ -17,7 +17,6 @@ services:
     depends_on:
       - mongo
       - qdrant
-      # - clearml-apiserver
     networks:
       - app-network
 
@@ -44,6 +43,18 @@ services:
       - "6333:6333"
     networks:
       - app-network
+
+  gradio-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: python3 gradio_app.py
+    container_name: gradio-app
+    ports:
+      - "7860:7860"
+    networks:
+      - app-network
+      
 
 networks:
   app-network:

@@ -28,3 +28,5 @@ youtube-transcript-api
 beautifulsoup4
 
 tqdm
+
+gradio

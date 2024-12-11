@@ -19,8 +19,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # Copy the application code
 COPY . .
 
-# Expose the port your app will run on
-EXPOSE 8000
+# Expose FastAPI and Gradio ports
+EXPOSE 8000 7860
 
-# Command to start your application
-CMD ["python3", "app.py"]
+# Start both services
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port 8000 & python3 gradio_app.py"]
