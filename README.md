@@ -86,3 +86,70 @@ RAG-Project/
 ![SS1](SS/SS1.jpg)
 ![SS2](SS/SS2.jpg)
 ![SS3](SS/SS3.jpg)
+
+## Project Description
+
+### Overview
+The **Retrieval Augmented Generation (RAG)** system is designed to assist ROS2 robotics developers with navigation stack development for agents with egomotion. The system focuses on specific subdomains, including:
+
+- **ROS2 robotics middleware**
+- **Nav2 navigation**
+- **Movit2 motion planning**
+- **Gazebo simulation**
+
+RAG combines retrieval-based and generation-based models, allowing it to retrieve relevant information from large corpora and generate domain-specific responses.
+
+---
+
+### Project Goals & Strategy
+The goal is to build a RAG system capable of answering specific questions regarding ROS2 navigation and related topics. We will implement the system iteratively, continuously improving its components. Initial iterations focus on integration, with further refinements in subsequent milestones.
+
+---
+
+### Milestones
+
+#### 1. Environment and Tooling Milestone
+- **Objective:** Set up a development environment using Docker Compose.
+- **Components:**
+  - **App:** For model training, serving, and API interactions.
+  - **MongoDB:** Database for storing raw RAG data after ETL.
+  - **Qdrant:** Vector search engine for the RAG system.
+  - **ClearML:** Experiment tracker and orchestrator.
+
+#### 2. ETL Milestone
+- **Objective:** Build an ETL pipeline to ingest ROS2 documentation and YouTube videos.
+- **Important:** Only CS370 Honors and CS-GY-6613 students need to handle video transcripts.
+- **Tool:** ClearML orchestrator to automate data ingestion and storage in MongoDB.
+
+#### 3. Featurization Pipeline Milestone
+- **Objective:** Implement a featurization pipeline to convert raw data into vectors.
+- **Tool:** Sentence Transformer model for vector embedding generation.
+- **Output:** Featurized data stored in MongoDB and Qdrant.
+
+#### 4. Fine-Tuning Milestone
+- **Objective:** Fine-tune a pre-trained Hugging Face model on the ROS2 subdomains.
+- **Important:** Only CS370 Honors and CS-GY-6613 students are required to perform fine-tuning.
+- **Tool:** Utilize existing fine-tuning tutorials, Google Colab, or other cloud services for model training.
+
+#### 5. Deploying the App Milestone
+- **Objective:** Develop a Gradio app for user interaction with the RAG system.
+- **Features:**
+  - Pre-populated questions related to ROS2 navigation.
+  - Use Ollama and Hugging Face Hub to pull the fine-tuned model.
+
+- **Example Questions:**
+  - "How can I navigate to a specific pose? Include replanning aspects in your answer."
+  - "Can you provide me with code for this task?"
+
+---
+
+### Technologies & Tools Used
+- **FastAPI:** For building the API endpoints.
+- **Gradio:** For the user interface.
+- **Docker:** For containerized deployment.
+- **MongoDB:** For storing raw data.
+- **Qdrant:** For vector search functionality.
+- **ClearML:** For experiment tracking and orchestration.
+- **Sentence Transformers:** For featurization (vector embeddings).
+- **Hugging Face:** For model fine-tuning and hosting.
+
